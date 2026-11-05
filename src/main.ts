@@ -1,5 +1,9 @@
 import { addIcons } from './icons';
-import { defaultSettings, TableEditorPluginSettings } from './settings';
+import {
+  defaultSettings,
+  TableEditorPluginSettings,
+  TableVerticalAlignment,
+} from './settings';
 import {
   TableControlsView,
   TableControlsViewType,
@@ -26,8 +30,62 @@ export default class TableEditorPlugin extends Plugin {
     void this.asyncOnload();
   }
 
+  public onunload(): void {
+    const bodies = getTargetBodies();
+    const classesToRemove = [
+      'advanced-tables-valign-top',
+      'advanced-tables-valign-middle',
+      'advanced-tables-valign-bottom',
+      'advanced-tables-justify',
+    ];
+
+    for (const body of bodies) {
+      body.removeClass(...classesToRemove);
+    }
+  }
+
+  public applyTableStyleClasses(): void {
+    const bodies = getTargetBodies();
+    const valignClasses = [
+      'advanced-tables-valign-top',
+      'advanced-tables-valign-middle',
+      'advanced-tables-valign-bottom',
+    ];
+
+    for (const body of bodies) {
+      body.removeClass(...valignClasses);
+
+      if (this.settings.verticalAlignment === TableVerticalAlignment.MIDDLE) {
+        body.addClass('advanced-tables-valign-middle');
+      } else if (
+        this.settings.verticalAlignment === TableVerticalAlignment.BOTTOM
+      ) {
+        body.addClass('advanced-tables-valign-bottom');
+      } else {
+        body.addClass('advanced-tables-valign-top');
+      }
+
+      if (this.settings.justifyText) {
+        body.addClass('advanced-tables-justify');
+      } else {
+        body.removeClass('advanced-tables-justify');
+      }
+    }
+  }
+
   private async asyncOnload(): Promise<void> {
     await this.loadSettings();
+
+    this.applyTableStyleClasses();
+
+    this.registerEvent(
+      this.app.workspace.on('window-open', () => this.applyTableStyleClasses()),
+    );
+    this.registerEvent(
+      this.app.workspace.on('layout-change', () =>
+        this.applyTableStyleClasses(),
+      ),
+    );
 
     this.registerView(
       TableControlsViewType,
@@ -156,6 +214,42 @@ export default class TableEditorPlugin extends Plugin {
       icon: 'alignRight',
       editorCheckCallback: this.newPerformTableAction((te: TableEditor) => {
         te.rightAlignColumn();
+      }),
+    });
+
+    this.addCommand({
+      id: 'set-table-valign-center',
+      name: 'Set table vertical alignment to center',
+      icon: 'valignCenter',
+      editorCheckCallback: this.newPerformTableAction((te: TableEditor) => {
+        te.setTableVerticalAlignment('middle');
+      }),
+    });
+
+    this.addCommand({
+      id: 'set-table-valign-top',
+      name: 'Set table vertical alignment to top',
+      icon: 'valignTop',
+      editorCheckCallback: this.newPerformTableAction((te: TableEditor) => {
+        te.setTableVerticalAlignment('top');
+      }),
+    });
+
+    this.addCommand({
+      id: 'set-table-valign-bottom',
+      name: 'Set table vertical alignment to bottom',
+      icon: 'valignBottom',
+      editorCheckCallback: this.newPerformTableAction((te: TableEditor) => {
+        te.setTableVerticalAlignment('bottom');
+      }),
+    });
+
+    this.addCommand({
+      id: 'toggle-table-justify',
+      name: 'Toggle table text justification',
+      icon: 'alignJustify',
+      editorCheckCallback: this.newPerformTableAction((te: TableEditor) => {
+        te.toggleTableJustify();
       }),
     });
 
@@ -440,6 +534,38 @@ class TableEditorSettingsTab extends PluginSettingTab {
           }),
       );
 
+    new Setting(containerEl)
+      .setName('Default table cell vertical alignment')
+      .setDesc('Sets the default vertical alignment of table cell content.')
+      .addDropdown((dropdown) =>
+        dropdown
+          .addOptions({
+            [TableVerticalAlignment.TOP]: 'Top (Default)',
+            [TableVerticalAlignment.MIDDLE]: 'Middle / Center',
+            [TableVerticalAlignment.BOTTOM]: 'Bottom',
+          })
+          .setValue(this.plugin.settings.verticalAlignment)
+          .onChange((value) => {
+            this.plugin.settings.verticalAlignment =
+              value as TableVerticalAlignment;
+            void this.plugin.saveData(this.plugin.settings);
+            this.plugin.applyTableStyleClasses();
+          }),
+      );
+
+    new Setting(containerEl)
+      .setName('Justify table cell text')
+      .setDesc('If enabled, text within table cells will be justified.')
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.justifyText)
+          .onChange((value) => {
+            this.plugin.settings.justifyText = value;
+            void this.plugin.saveData(this.plugin.settings);
+            this.plugin.applyTableStyleClasses();
+          }),
+      );
+
     const div = containerEl.createDiv({
       cls: 'advanced-tables-donation',
     });
@@ -468,6 +594,24 @@ class TableEditorSettingsTab extends PluginSettingTab {
     );
   }
 }
+
+const getTargetBodies = (): HTMLElement[] => {
+  const bodies: HTMLElement[] = [];
+  if (typeof document !== 'undefined' && document?.body) {
+    bodies.push(document.body);
+  }
+  if (typeof activeDocument !== 'undefined' && activeDocument?.body && !bodies.includes(activeDocument.body)) {
+    bodies.push(activeDocument.body);
+  }
+  if (
+    typeof activeWindow !== 'undefined' &&
+    activeWindow?.document?.body &&
+    !bodies.includes(activeWindow.document.body)
+  ) {
+    bodies.push(activeWindow.document.body);
+  }
+  return bodies;
+};
 
 const createDonateButton = (link: string, img: HTMLElement): HTMLElement => {
   const a = activeDocument.createElement('a');

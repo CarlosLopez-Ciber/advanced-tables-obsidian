@@ -58,6 +58,21 @@ export class TableControlsView extends ItemView {
     this.drawBtn(rowOneBtns, 'alignRight', 'right align column', (te) =>
       te.rightAlignColumn(),
     );
+    this.drawBtn(rowOneBtns, 'alignJustify', 'justify table text', (te) =>
+      te.toggleTableJustify(),
+    );
+
+    const rowVAlignBtns = navHeader.createDiv({ cls: 'nav-buttons-container' });
+    rowVAlignBtns.createSpan({ cls: 'advanced-tables-row-label' }).setText('Valign:');
+    this.drawBtn(rowVAlignBtns, 'valignTop', 'align table cells to top', (te) =>
+      te.setTableVerticalAlignment('top'),
+    );
+    this.drawBtn(rowVAlignBtns, 'valignCenter', 'align table cells to center', (te) =>
+      te.setTableVerticalAlignment('middle'),
+    );
+    this.drawBtn(rowVAlignBtns, 'valignBottom', 'align table cells to bottom', (te) =>
+      te.setTableVerticalAlignment('bottom'),
+    );
 
     const rowTwoBtns = navHeader.createDiv({ cls: 'nav-buttons-container' });
     rowTwoBtns.createSpan({ cls: 'advanced-tables-row-label' }).setText('Move:');
