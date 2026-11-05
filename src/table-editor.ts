@@ -10,6 +10,7 @@ import { App, Editor, Modal, Notice, TFile } from 'obsidian';
 export class TableEditor {
   private readonly app: App;
   private readonly settings: TableEditorPluginSettings;
+  private readonly editor: Editor;
   private readonly mte: MTEEditor;
 
   constructor(
@@ -20,6 +21,7 @@ export class TableEditor {
   ) {
     this.app = app;
     this.settings = settings;
+    this.editor = editor;
 
     const ote = new ObsidianTextEditor(app, file, editor);
     this.mte = new MTEEditor(ote);
@@ -120,6 +122,189 @@ export class TableEditor {
 
   public readonly exportCSVModal = (): void => {
     new CSVModal(this.app, this.mte, this.settings).open();
+  };
+
+  public readonly setTableVerticalAlignment = (
+    align: 'top' | 'middle' | 'bottom',
+  ): void => {
+    if (!this.cursorIsInTable()) {
+      return;
+    }
+
+    const pos = this.editor.getCursor();
+    const line = this.editor.getLine(pos.line);
+    if (this.isDelimiterRow(line)) {
+      return;
+    }
+
+    const cells = this.parseRowCells(line);
+    const cell = cells.find((c) => pos.ch >= c.start && pos.ch <= c.end);
+    if (!cell) {
+      return;
+    }
+
+    const current = this.parseCellFormatting(cell.trimmed);
+    const newVAlign = current.valign === align ? 'top' : align;
+    const newCellText = this.formatCell(
+      current.content,
+      current.justify,
+      newVAlign,
+    );
+
+    const newLine =
+      line.slice(0, cell.start) + ' ' + newCellText + ' ' + line.slice(cell.end);
+    this.editor.setLine(pos.line, newLine);
+    this.formatTable();
+  };
+
+  public readonly toggleTableJustify = (): void => {
+    if (!this.cursorIsInTable()) {
+      return;
+    }
+
+    const pos = this.editor.getCursor();
+    const line = this.editor.getLine(pos.line);
+    if (this.isDelimiterRow(line)) {
+      return;
+    }
+
+    const cells = this.parseRowCells(line);
+    const cell = cells.find((c) => pos.ch >= c.start && pos.ch <= c.end);
+    if (!cell) {
+      return;
+    }
+
+    const current = this.parseCellFormatting(cell.trimmed);
+    const newCellText = this.formatCell(
+      current.content,
+      !current.justify,
+      current.valign,
+    );
+
+    const newLine =
+      line.slice(0, cell.start) + ' ' + newCellText + ' ' + line.slice(cell.end);
+    this.editor.setLine(pos.line, newLine);
+    this.formatTable();
+  };
+
+  private readonly parseCellFormatting = (
+    cellText: string,
+  ): {
+    content: string;
+    justify: boolean;
+    valign: 'top' | 'middle' | 'bottom';
+  } => {
+    let content = cellText.trim();
+    let justify = false;
+    let valign: 'top' | 'middle' | 'bottom' = 'top';
+
+    const divMatch = content.match(/^<div\s+([^>]*?)>([\s\S]*?)<\/div>$/i);
+    if (divMatch) {
+      const attrs = divMatch[1];
+      const inner = divMatch[2].trim();
+
+      if (
+        /text-align:\s*justify/i.test(attrs) ||
+        /align=["']justify["']/i.test(attrs)
+      ) {
+        justify = true;
+      }
+      if (/align-items:\s*center/i.test(attrs)) {
+        valign = 'middle';
+      } else if (/align-items:\s*flex-end/i.test(attrs)) {
+        valign = 'bottom';
+      }
+
+      const innerMatch = inner.match(/^<div\s+([^>]*?)>([\s\S]*?)<\/div>$/i);
+      if (innerMatch) {
+        const innerAttrs = innerMatch[1];
+        if (
+          /text-align:\s*justify/i.test(innerAttrs) ||
+          /align=["']justify["']/i.test(innerAttrs)
+        ) {
+          justify = true;
+        }
+        if (/align-items:\s*center/i.test(innerAttrs)) {
+          valign = 'middle';
+        } else if (/align-items:\s*flex-end/i.test(innerAttrs)) {
+          valign = 'bottom';
+        }
+        content = innerMatch[2].trim();
+      } else {
+        content = inner;
+      }
+    }
+
+    return { content, justify, valign };
+  };
+
+  private readonly formatCell = (
+    content: string,
+    justify: boolean,
+    valign: 'top' | 'middle' | 'bottom',
+  ): string => {
+    const styles: string[] = [];
+    if (valign === 'middle') {
+      styles.push(
+        'display: flex;',
+        'align-items: center;',
+        'min-height: 100%;',
+      );
+    } else if (valign === 'bottom') {
+      styles.push(
+        'display: flex;',
+        'align-items: flex-end;',
+        'min-height: 100%;',
+      );
+    }
+
+    if (justify) {
+      styles.push('text-align: justify;');
+    }
+
+    if (styles.length === 0) {
+      return content;
+    }
+
+    return `<div style="${styles.join(' ')}">${content}</div>`;
+  };
+
+  private readonly isDelimiterRow = (line: string): boolean =>
+    /^\s*\|?\s*:?-+:?\s*(\|?\s*:?-+:?\s*)*\|?\s*$/.test(line);
+
+  private readonly parseRowCells = (
+    line: string,
+  ): { start: number; end: number; raw: string; trimmed: string }[] => {
+    const pipes: number[] = [];
+    let inEscape = false;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '\\') {
+        inEscape = !inEscape;
+      } else if (line[i] === '|' && !inEscape) {
+        pipes.push(i);
+      } else {
+        inEscape = false;
+      }
+    }
+
+    if (pipes.length < 2) {
+      return [];
+    }
+
+    const cells: {
+      start: number;
+      end: number;
+      raw: string;
+      trimmed: string;
+    }[] = [];
+    for (let i = 0; i < pipes.length - 1; i++) {
+      const start = pipes[i] + 1;
+      const end = pipes[i + 1];
+      const raw = line.slice(start, end);
+      cells.push({ start, end, raw, trimmed: raw.trim() });
+    }
+
+    return cells;
   };
 }
 
