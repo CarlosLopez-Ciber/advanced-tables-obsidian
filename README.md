@@ -6,7 +6,8 @@ Add improved navigation, formatting, and manipulation to markdown tables in Obsi
 - Excel-like table navigation (tab/enter between cells and rows)
 - [Spreadsheet formulas!](https://github.com/tgrosinger/advanced-tables-obsidian/blob/main/docs/help.md#using-formulas-in-markdown-tables)
 - Add, remove, and move columns and rows
-- Set column alignment (left, center, right)
+- Set column alignment (left, center, right) and justify table text
+- Set cell vertical alignment (top, middle/center, bottom)
 - Sort rows by a specified column
 - Export to CSV
 - Works on Obsidian Mobile (See notes below)
@@ -34,6 +35,16 @@ When a cursor is in a markdown table...
 
 Or use the command palette and search "Advanced Tables". There are many
 commands available, don't forget to scroll!
+
+### Table Controls & Alignment
+
+Open the Table Controls sidebar (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd> or click the table icon in the ribbon) for quick access to formatting and navigation controls:
+
+- **Horizontal Alignment & Justify**: Align the active column to the left, center, or right, or toggle text justification on the active cell or globally with the **Justify** toolbar button.
+- **Vertical Alignment**: Control cell vertical alignment with dedicated **Valign** toolbar buttons: **Top**, **Center** (middle), and **Bottom**.
+- **Commands & Settings**: All alignment actions can also be executed through the command palette (`Set table vertical alignment to center/top/bottom`, `Toggle table text justification`), configured per-note via frontmatter `cssclasses`, or set globally in plugin settings.
+
+For full details on table formatting, styling, and note-level classes, see the [Help Docs](https://github.com/tgrosinger/advanced-tables-obsidian/blob/main/docs/help.md#table-vertical-alignment-and-justification).
 
 ## Formulas and Spreadsheets in Markdown!
 
