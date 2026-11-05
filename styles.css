@@ -49,7 +49,9 @@
 }
 
 .advanced-tables-row-label {
-  width: 50px;
+  min-width: 56px;
+  line-height: var(--advanced-tables-helper-size);
+  white-space: nowrap;
 }
 
 .widget-icon {
@@ -75,4 +77,203 @@
 
 .advanced-tables-donate-button {
   margin: 10px;
+}
+
+/* ==========================================================================
+   Table Alignment & Justification Enhancements
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Tier c: Global body classes (Settings > Advanced Tables)
+   -------------------------------------------------------------------------- */
+
+/* Global - Vertical alignment: Middle / Center */
+body.advanced-tables-valign-middle,
+body.advanced-tables-valign-center {
+  --table-cell-vertical-alignment: middle !important;
+}
+
+body.advanced-tables-valign-middle .markdown-rendered :is(th, td),
+body.advanced-tables-valign-center .markdown-rendered :is(th, td),
+body.advanced-tables-valign-middle .markdown-source-view.mod-cm6 .cm-table-widget :is(th, td),
+body.advanced-tables-valign-center .markdown-source-view.mod-cm6 .cm-table-widget :is(th, td) {
+  vertical-align: middle !important;
+}
+
+body.advanced-tables-valign-middle .markdown-source-view.mod-cm6 .cm-table-widget tr,
+body.advanced-tables-valign-center .markdown-source-view.mod-cm6 .cm-table-widget tr {
+  height: unset !important;
+}
+
+body.advanced-tables-valign-middle .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper,
+body.advanced-tables-valign-center .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+/* Global - Vertical alignment: Bottom */
+body.advanced-tables-valign-bottom {
+  --table-cell-vertical-alignment: bottom !important;
+}
+
+body.advanced-tables-valign-bottom .markdown-rendered :is(th, td),
+body.advanced-tables-valign-bottom .markdown-source-view.mod-cm6 .cm-table-widget :is(th, td) {
+  vertical-align: bottom !important;
+}
+
+body.advanced-tables-valign-bottom .markdown-source-view.mod-cm6 .cm-table-widget tr {
+  height: unset !important;
+}
+
+body.advanced-tables-valign-bottom .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-end !important;
+}
+
+/* Global - Vertical alignment: Top */
+body.advanced-tables-valign-top {
+  --table-cell-vertical-alignment: top !important;
+}
+
+body.advanced-tables-valign-top .markdown-rendered :is(th, td),
+body.advanced-tables-valign-top .markdown-source-view.mod-cm6 .cm-table-widget :is(th, td) {
+  vertical-align: top !important;
+}
+
+body.advanced-tables-valign-top .markdown-source-view.mod-cm6 .cm-table-widget tr {
+  height: unset !important;
+}
+
+body.advanced-tables-valign-top .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+}
+
+/* Global - Text justification (inter-word) */
+body.advanced-tables-justify .markdown-rendered :is(th, td):not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]),
+body.advanced-tables-justify .markdown-source-view.mod-cm6 .cm-table-widget td:not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) .cm-line,
+body.advanced-tables-justify .markdown-source-view.mod-cm6 .cm-table-widget td:not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) .table-cell-wrapper {
+  text-align: justify !important;
+  text-justify: inter-word !important;
+}
+
+/* --------------------------------------------------------------------------
+   Tier b: Per-note frontmatter cssclasses
+   -------------------------------------------------------------------------- */
+
+/* Note - Vertical alignment: Middle / Center */
+.table-valign-middle,
+.table-valign-center {
+  --table-cell-vertical-alignment: middle !important;
+}
+
+.table-valign-middle .markdown-rendered :is(th, td),
+.table-valign-center .markdown-rendered :is(th, td),
+.table-valign-middle .markdown-source-view.mod-cm6 .cm-table-widget :is(th, td),
+.table-valign-center .markdown-source-view.mod-cm6 .cm-table-widget :is(th, td) {
+  vertical-align: middle !important;
+}
+
+.table-valign-middle .markdown-source-view.mod-cm6 .cm-table-widget tr,
+.table-valign-center .markdown-source-view.mod-cm6 .cm-table-widget tr {
+  height: unset !important;
+}
+
+.table-valign-middle .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper,
+.table-valign-center .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+/* Note - Vertical alignment: Bottom */
+.table-valign-bottom {
+  --table-cell-vertical-alignment: bottom !important;
+}
+
+.table-valign-bottom .markdown-rendered :is(th, td),
+.table-valign-bottom .markdown-source-view.mod-cm6 .cm-table-widget :is(th, td) {
+  vertical-align: bottom !important;
+}
+
+.table-valign-bottom .markdown-source-view.mod-cm6 .cm-table-widget tr {
+  height: unset !important;
+}
+
+.table-valign-bottom .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-end !important;
+}
+
+/* Note - Vertical alignment: Top */
+.table-valign-top {
+  --table-cell-vertical-alignment: top !important;
+}
+
+.table-valign-top .markdown-rendered :is(th, td),
+.table-valign-top .markdown-source-view.mod-cm6 .cm-table-widget :is(th, td) {
+  vertical-align: top !important;
+}
+
+.table-valign-top .markdown-source-view.mod-cm6 .cm-table-widget tr {
+  height: unset !important;
+}
+
+.table-valign-top .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+}
+
+/* Note - Text justification (inter-word) */
+.table-justify .markdown-rendered :is(th, td):not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]),
+.table-justify .markdown-source-view.mod-cm6 .cm-table-widget td:not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) .cm-line,
+.table-justify .markdown-source-view.mod-cm6 .cm-table-widget td:not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) .table-cell-wrapper {
+  text-align: justify !important;
+  text-justify: inter-word !important;
+}
+
+/* --------------------------------------------------------------------------
+   Tier a: Per-table classes
+   -------------------------------------------------------------------------- */
+
+table.table-valign-middle,
+table.table-valign-center {
+  --table-cell-vertical-alignment: middle !important;
+}
+
+table.table-valign-middle :is(th, td),
+table.table-valign-center :is(th, td) {
+  vertical-align: middle !important;
+}
+
+table.table-valign-bottom {
+  --table-cell-vertical-alignment: bottom !important;
+}
+
+table.table-valign-bottom :is(th, td) {
+  vertical-align: bottom !important;
+}
+
+table.table-valign-top {
+  --table-cell-vertical-alignment: top !important;
+}
+
+table.table-valign-top :is(th, td) {
+  vertical-align: top !important;
+}
+
+table.table-justify :is(th, td):not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) {
+  text-align: justify !important;
+  text-justify: inter-word !important;
 }
