@@ -190,20 +190,16 @@ body.advanced-tables-justify .markdown-source-view.mod-cm6 .cm-table-widget td:n
   --table-cell-vertical-alignment: middle !important;
 }
 
-.table-valign-middle .markdown-rendered :is(th, td),
-.table-valign-center .markdown-rendered :is(th, td),
-.table-valign-middle .markdown-source-view.mod-cm6 .cm-table-widget :is(th, td),
-.table-valign-center .markdown-source-view.mod-cm6 .cm-table-widget :is(th, td) {
+body .workspace-leaf :is(.table-valign-middle, .table-valign-center):is(.markdown-rendered, .markdown-source-view, .markdown-preview-view) :is(th, td),
+body .workspace-leaf :is(.table-valign-middle, .table-valign-center) .cm-table-widget :is(th, td) {
   vertical-align: middle !important;
 }
 
-.table-valign-middle .markdown-source-view.mod-cm6 .cm-table-widget tr,
-.table-valign-center .markdown-source-view.mod-cm6 .cm-table-widget tr {
+body .workspace-leaf :is(.table-valign-middle, .table-valign-center) .cm-table-widget tr {
   height: unset !important;
 }
 
-.table-valign-middle .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]),
-.table-valign-center .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
+body .workspace-leaf :is(.table-valign-middle, .table-valign-center) .cm-table-widget .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
   height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
@@ -215,16 +211,16 @@ body.advanced-tables-justify .markdown-source-view.mod-cm6 .cm-table-widget td:n
   --table-cell-vertical-alignment: bottom !important;
 }
 
-.table-valign-bottom .markdown-rendered :is(th, td),
-.table-valign-bottom .markdown-source-view.mod-cm6 .cm-table-widget :is(th, td) {
+body .workspace-leaf .table-valign-bottom:is(.markdown-rendered, .markdown-source-view, .markdown-preview-view) :is(th, td),
+body .workspace-leaf .table-valign-bottom .cm-table-widget :is(th, td) {
   vertical-align: bottom !important;
 }
 
-.table-valign-bottom .markdown-source-view.mod-cm6 .cm-table-widget tr {
+body .workspace-leaf .table-valign-bottom .cm-table-widget tr {
   height: unset !important;
 }
 
-.table-valign-bottom .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
+body .workspace-leaf .table-valign-bottom .cm-table-widget .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
   height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
@@ -236,16 +232,16 @@ body.advanced-tables-justify .markdown-source-view.mod-cm6 .cm-table-widget td:n
   --table-cell-vertical-alignment: top !important;
 }
 
-.table-valign-top .markdown-rendered :is(th, td),
-.table-valign-top .markdown-source-view.mod-cm6 .cm-table-widget :is(th, td) {
+body .workspace-leaf .table-valign-top:is(.markdown-rendered, .markdown-source-view, .markdown-preview-view) :is(th, td),
+body .workspace-leaf .table-valign-top .cm-table-widget :is(th, td) {
   vertical-align: top !important;
 }
 
-.table-valign-top .markdown-source-view.mod-cm6 .cm-table-widget tr {
+body .workspace-leaf .table-valign-top .cm-table-widget tr {
   height: unset !important;
 }
 
-.table-valign-top .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
+body .workspace-leaf .table-valign-top .cm-table-widget .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
   height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
@@ -253,24 +249,60 @@ body.advanced-tables-justify .markdown-source-view.mod-cm6 .cm-table-widget td:n
 }
 
 /* Note - Text justification (inter-word) */
-.table-justify .markdown-rendered :is(th, td):not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]),
-.table-justify .markdown-source-view.mod-cm6 .cm-table-widget td:not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) .cm-line,
-.table-justify .markdown-source-view.mod-cm6 .cm-table-widget td:not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
+body .workspace-leaf .table-justify:is(.markdown-rendered, .markdown-source-view, .markdown-preview-view) :is(th, td):not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]),
+body .workspace-leaf .table-justify .cm-table-widget td:not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) .cm-line,
+body .workspace-leaf .table-justify .cm-table-widget td:not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
   text-align: justify !important;
   text-justify: inter-word !important;
 }
 
 /* --------------------------------------------------------------------------
-   Tier a: Per-table classes
+   Tier a: Per-table classes and per-cell formatting
    -------------------------------------------------------------------------- */
 
+/* Per-cell - Vertical alignment: Middle / Center */
+body .workspace-leaf :is(.markdown-rendered, .markdown-source-view, .markdown-preview-view) :is(td, th):has(div[style*="align-items: center"]),
+body .workspace-leaf .markdown-source-view.mod-cm6 .cm-table-widget :is(td, th):has(div[style*="align-items: center"]) {
+  vertical-align: middle !important;
+  --table-cell-vertical-alignment: middle !important;
+}
+
+body .workspace-leaf .markdown-source-view.mod-cm6 .cm-table-widget tr:has(div[style*="align-items: center"]) {
+  height: unset !important;
+}
+
+body .workspace-leaf .markdown-source-view.mod-cm6 .cm-table-widget :is(td, th):has(div[style*="align-items: center"]) .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+/* Per-cell - Vertical alignment: Bottom */
+body .workspace-leaf :is(.markdown-rendered, .markdown-source-view, .markdown-preview-view) :is(td, th):has(div[style*="align-items: flex-end"]),
+body .workspace-leaf .markdown-source-view.mod-cm6 .cm-table-widget :is(td, th):has(div[style*="align-items: flex-end"]) {
+  vertical-align: bottom !important;
+  --table-cell-vertical-alignment: bottom !important;
+}
+
+body .workspace-leaf .markdown-source-view.mod-cm6 .cm-table-widget tr:has(div[style*="align-items: flex-end"]) {
+  height: unset !important;
+}
+
+body .workspace-leaf .markdown-source-view.mod-cm6 .cm-table-widget :is(td, th):has(div[style*="align-items: flex-end"]) .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-end !important;
+}
+
+/* Per-table classes */
 table.table-valign-middle,
 table.table-valign-center {
   --table-cell-vertical-alignment: middle !important;
 }
 
-table.table-valign-middle :is(th, td),
-table.table-valign-center :is(th, td) {
+body .workspace-leaf table:is(.table-valign-middle, .table-valign-center) :is(th, td) {
   vertical-align: middle !important;
 }
 
@@ -278,7 +310,7 @@ table.table-valign-bottom {
   --table-cell-vertical-alignment: bottom !important;
 }
 
-table.table-valign-bottom :is(th, td) {
+body .workspace-leaf table.table-valign-bottom :is(th, td) {
   vertical-align: bottom !important;
 }
 
@@ -286,11 +318,11 @@ table.table-valign-top {
   --table-cell-vertical-alignment: top !important;
 }
 
-table.table-valign-top :is(th, td) {
+body .workspace-leaf table.table-valign-top :is(th, td) {
   vertical-align: top !important;
 }
 
-table.table-justify :is(th, td):not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) {
+body .workspace-leaf table.table-justify :is(th, td):not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) {
   text-align: justify !important;
   text-justify: inter-word !important;
 }
