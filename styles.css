@@ -84,6 +84,23 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
+   Live Preview Cell Editing Protections (Prevent Duplicate Content Glitch)
+   -------------------------------------------------------------------------- */
+
+/* 1. Ensure any table-cell-wrapper hidden by Obsidian stays strictly hidden */
+.markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper[style*="display: none"],
+.markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper[style*="display:none"],
+.markdown-rendered .table-cell-wrapper[style*="display: none"],
+.markdown-rendered .table-cell-wrapper[style*="display:none"] {
+  display: none !important;
+}
+
+/* 2. When a cell enters editing mode, immediately hide any non-editor sibling wrapper */
+.markdown-source-view.mod-cm6 .cm-table-widget :is(td, th):has(.cm-editor) > .table-cell-wrapper:not(:has(.cm-editor)) {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
    Tier c: Global body classes (Settings > Advanced Tables)
    -------------------------------------------------------------------------- */
 
@@ -105,8 +122,8 @@ body.advanced-tables-valign-center .markdown-source-view.mod-cm6 .cm-table-widge
   height: unset !important;
 }
 
-body.advanced-tables-valign-middle .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper,
-body.advanced-tables-valign-center .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper {
+body.advanced-tables-valign-middle .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]),
+body.advanced-tables-valign-center .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
   height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
@@ -127,7 +144,7 @@ body.advanced-tables-valign-bottom .markdown-source-view.mod-cm6 .cm-table-widge
   height: unset !important;
 }
 
-body.advanced-tables-valign-bottom .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper {
+body.advanced-tables-valign-bottom .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
   height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
@@ -148,7 +165,7 @@ body.advanced-tables-valign-top .markdown-source-view.mod-cm6 .cm-table-widget t
   height: unset !important;
 }
 
-body.advanced-tables-valign-top .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper {
+body.advanced-tables-valign-top .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
   height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
@@ -158,7 +175,7 @@ body.advanced-tables-valign-top .markdown-source-view.mod-cm6 .cm-table-widget .
 /* Global - Text justification (inter-word) */
 body.advanced-tables-justify .markdown-rendered :is(th, td):not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]),
 body.advanced-tables-justify .markdown-source-view.mod-cm6 .cm-table-widget td:not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) .cm-line,
-body.advanced-tables-justify .markdown-source-view.mod-cm6 .cm-table-widget td:not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) .table-cell-wrapper {
+body.advanced-tables-justify .markdown-source-view.mod-cm6 .cm-table-widget td:not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
   text-align: justify !important;
   text-justify: inter-word !important;
 }
@@ -185,8 +202,8 @@ body.advanced-tables-justify .markdown-source-view.mod-cm6 .cm-table-widget td:n
   height: unset !important;
 }
 
-.table-valign-middle .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper,
-.table-valign-center .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper {
+.table-valign-middle .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]),
+.table-valign-center .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
   height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
@@ -207,7 +224,7 @@ body.advanced-tables-justify .markdown-source-view.mod-cm6 .cm-table-widget td:n
   height: unset !important;
 }
 
-.table-valign-bottom .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper {
+.table-valign-bottom .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
   height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
@@ -228,7 +245,7 @@ body.advanced-tables-justify .markdown-source-view.mod-cm6 .cm-table-widget td:n
   height: unset !important;
 }
 
-.table-valign-top .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper {
+.table-valign-top .markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
   height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
@@ -238,7 +255,7 @@ body.advanced-tables-justify .markdown-source-view.mod-cm6 .cm-table-widget td:n
 /* Note - Text justification (inter-word) */
 .table-justify .markdown-rendered :is(th, td):not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]),
 .table-justify .markdown-source-view.mod-cm6 .cm-table-widget td:not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) .cm-line,
-.table-justify .markdown-source-view.mod-cm6 .cm-table-widget td:not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) .table-cell-wrapper {
+.table-justify .markdown-source-view.mod-cm6 .cm-table-widget td:not([align="center"]):not([align="right"]):not([style*="center"]):not([style*="right"]) .table-cell-wrapper:not([style*="display: none"]):not([style*="display:none"]) {
   text-align: justify !important;
   text-justify: inter-word !important;
 }
